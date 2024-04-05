@@ -62,7 +62,7 @@ function App() {
       });
     } else if (e.key === "ArrowDown") {
       setselectedSuggestionIndex((prevIndex) => {
-        return prevIndex < suggestions.users.length - 1
+        return prevIndex < suggestions?.users?.length - 1
           ? prevIndex + 1
           : prevIndex;
       });
