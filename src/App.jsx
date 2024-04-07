@@ -1,6 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import Pill from "./components/Pill";
 
@@ -9,7 +7,7 @@ function App() {
   const [suggestions, setsuggestions] = useState([]);
   const [selectedUser, setselectedUser] = useState([]);
   const [selectedUserSet, setselectedUserSet] = useState(new Set());
-  const [selectedSuggestionIndex, setselectedSuggestionIndex] = useState(-1);
+  const [selectedSuggestionIndex, setselectedSuggestionIndex] = useState(0);
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -25,7 +23,9 @@ function App() {
           console.error(err);
         });
     };
-    fetchUsers();
+    const debounceFetch = setTimeout(fetchUsers, 800);
+
+    return () => clearTimeout(debounceFetch);
   }, [searchTerm]);
 
   const handelSelectUser = (user) => {
@@ -69,7 +69,7 @@ function App() {
     } else if (e.key === "Enter") {
       if (selectedSuggestionIndex !== -1) {
         handelSelectUser(suggestions.users[selectedSuggestionIndex]);
-        setselectedSuggestionIndex(-1);
+        setselectedSuggestionIndex(0);
       }
     }
   };
@@ -91,9 +91,7 @@ function App() {
             ref={inputRef}
             type="text"
             value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-            }}
+            onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={handelKeyDown}
             placeholder="Search Users..."
             className=" h-5 p-1 w-full focus:outline-none"
